@@ -1,0 +1,5 @@
+.DS_Store
+.env
+storage/logs/*.log
+storage/logs/*.txt
+vendor/
