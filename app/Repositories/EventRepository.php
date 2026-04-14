@@ -164,6 +164,20 @@ final class EventRepository
         );
     }
 
+    public function markSampleTest(int $id, ?string $apiResponse = null, string $skipReason = 'meta_dashboard_sample'): void
+    {
+        $this->updateStatus(
+            $id,
+            'sample_test',
+            null,
+            null,
+            $apiResponse ?? 'Meta dashboard sample/test payload detected. Caption lookup and DM send skipped.',
+            null,
+            true,
+            $skipReason
+        );
+    }
+
     public function markMatched(int $id, ?int $ruleId, ?string $matchedKeyword, string $replyPayload): void
     {
         $this->updateStatus($id, 'matched', $ruleId, $matchedKeyword, null, $replyPayload);
