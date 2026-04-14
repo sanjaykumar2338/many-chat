@@ -17,7 +17,7 @@ Auth::requireLogin();
 $databaseError = null;
 $editRule = null;
 $statusFilter = trim((string) ($_GET['status'] ?? ''));
-$allowedStatuses = ['received', 'matched', 'sent', 'failed', 'skipped', 'no_match', 'bot_disabled', 'dry_run', 'invalid_payload'];
+$allowedStatuses = ['received', 'matched', 'sent', 'failed', 'skipped', 'sample_test', 'no_match', 'bot_disabled', 'dry_run', 'invalid_payload'];
 
 try {
     $pdo = Database::connection();
@@ -112,6 +112,7 @@ try {
     $events = [];
 }
 
+$lastWebhookReceivedAt = last_real_webhook_received_at();
 $successMessage = flash('success');
 $errorMessage = flash('error');
 
@@ -120,10 +121,39 @@ function status_class(string $status): string
     return match ($status) {
         'sent' => 'success',
         'failed', 'invalid_payload' => 'error',
-        'dry_run', 'matched' => 'warning',
+        'dry_run', 'matched', 'sample_test' => 'warning',
         'skipped' => 'warning',
         default => 'muted',
     };
+}
+
+function last_real_webhook_received_at(): ?string
+{
+    $logFile = dirname(__DIR__) . '/storage/logs/instagram_bot.log';
+
+    if (!is_file($logFile) || !is_readable($logFile)) {
+        return null;
+    }
+
+    $lines = file($logFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+    if ($lines === false) {
+        return null;
+    }
+
+    for ($index = count($lines) - 1; $index >= 0; $index--) {
+        $line = $lines[$index];
+
+        if (!str_contains($line, 'REAL_WEBHOOK_HIT')) {
+            continue;
+        }
+
+        if (preg_match('/^\[([^\]]+)\]\s+\w+\s+REAL_WEBHOOK_HIT\b/', $line, $matches) === 1) {
+            return $matches[1];
+        }
+    }
+
+    return null;
 }
 ?>
 <!DOCTYPE html>
@@ -184,6 +214,7 @@ function status_class(string $status): string
                 <div><?= e(Env::get('META_APP_MODE', 'development')) ?></div>
             </div>
         </div>
+        <p class="muted">Last webhook received at: <?= e($lastWebhookReceivedAt ?? 'No webhook hit logged yet') ?></p>
     </section>
 
     <section class="panel">

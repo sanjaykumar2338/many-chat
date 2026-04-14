@@ -24,16 +24,28 @@ final class Logger
     private static function write(string $level, string $message, array $context = []): void
     {
         $logDirectory = dirname(__DIR__, 2) . '/storage/logs';
-
-        if (!is_dir($logDirectory)) {
-            mkdir($logDirectory, 0775, true);
-        }
+        $logFile = $logDirectory . '/instagram_bot.log';
 
         $contextJson = $context === []
             ? ''
             : ' ' . json_encode($context, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 
         $line = sprintf("[%s] %s %s%s\n", gmdate('c'), $level, $message, $contextJson);
-        error_log($line, 3, $logDirectory . '/instagram_bot.log');
+
+        try {
+            if (!is_dir($logDirectory) && !@mkdir($logDirectory, 0775, true) && !is_dir($logDirectory)) {
+                error_log($line);
+                return;
+            }
+
+            if (!is_writable(dirname($logFile))) {
+                error_log($line);
+                return;
+            }
+
+            @error_log($line, 3, $logFile);
+        } catch (\Throwable) {
+            error_log($line);
+        }
     }
 }

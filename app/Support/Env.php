@@ -7,6 +7,7 @@ namespace App\Support;
 final class Env
 {
     private static bool $loaded = false;
+    private static ?string $loadedFilePath = null;
 
     public static function load(string $basePath): void
     {
@@ -15,8 +16,10 @@ final class Env
         }
 
         $envFile = rtrim($basePath, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . '.env';
+        self::$loadedFilePath = $envFile;
 
         if (!is_file($envFile)) {
+            self::logLoadDiagnostics($envFile, false);
             self::$loaded = true;
             return;
         }
@@ -24,6 +27,7 @@ final class Env
         $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
         if ($lines === false) {
+            self::logLoadDiagnostics($envFile, true);
             self::$loaded = true;
             return;
         }
@@ -59,7 +63,13 @@ final class Env
             putenv($name . '=' . $value);
         }
 
+        self::logLoadDiagnostics($envFile, true);
         self::$loaded = true;
+    }
+
+    public static function loadedFilePath(): ?string
+    {
+        return self::$loadedFilePath;
     }
 
     public static function get(string $key, ?string $default = null): string
@@ -93,5 +103,38 @@ final class Env
         }
 
         return (int) $value;
+    }
+
+    private static function logLoadDiagnostics(string $envFile, bool $fileFound): void
+    {
+        $metaAccessToken = self::get('META_ACCESS_TOKEN');
+        $instagramAccessToken = self::get('INSTAGRAM_ACCESS_TOKEN');
+        $metaAppSecret = self::get('META_APP_SECRET');
+        $instagramAppSecret = self::get('INSTAGRAM_APP_SECRET');
+        $appSecretSource = $instagramAppSecret !== ''
+            ? 'INSTAGRAM_APP_SECRET'
+            : ($metaAppSecret !== '' ? 'META_APP_SECRET' : 'none');
+
+        error_log(sprintf(
+            'Env load diagnostics: path=%s, found=%s, META_ACCESS_TOKEN present: %s, prefix: %s, INSTAGRAM_ACCESS_TOKEN present: %s, prefix: %s, META_APP_SECRET present: %s, INSTAGRAM_APP_SECRET present: %s, app secret source: %s',
+            $envFile,
+            $fileFound ? 'yes' : 'no',
+            $metaAccessToken !== '' ? 'yes' : 'no',
+            self::secretPrefix($metaAccessToken),
+            $instagramAccessToken !== '' ? 'yes' : 'no',
+            self::secretPrefix($instagramAccessToken),
+            $metaAppSecret !== '' ? 'yes' : 'no',
+            $instagramAppSecret !== '' ? 'yes' : 'no',
+            $appSecretSource
+        ));
+    }
+
+    private static function secretPrefix(string $value): string
+    {
+        if ($value === '') {
+            return 'n/a';
+        }
+
+        return substr($value, 0, 6);
     }
 }
