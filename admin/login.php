@@ -75,6 +75,10 @@ $isConfigured = Env::get('ADMIN_USERNAME') !== ''
             <button type="submit">Sign In</button>
         </form>
     </section>
+    <footer class="public-links" aria-label="Public links">
+        <a href="../privacy-policy.html">Privacy Policy</a>
+        <a href="../terms-of-service.html">Terms of Service</a>
+    </footer>
 </main>
 </body>
 </html>

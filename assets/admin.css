@@ -319,6 +319,25 @@ pre {
     margin: 0 auto;
 }
 
+.public-links {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    color: #667085;
+    font-size: 14px;
+}
+
+.public-links a {
+    color: #1264a3;
+    text-decoration: none;
+}
+
+.public-links a:hover {
+    text-decoration: underline;
+}
+
 @media (max-width: 860px) {
     .topbar,
     .section-head {
