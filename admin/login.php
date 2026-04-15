@@ -40,14 +40,32 @@ $isConfigured = Env::get('ADMIN_USERNAME') !== ''
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Instagram Comment DM MVP Login</title>
+    <title>Inst Automation Bot Login</title>
     <link rel="stylesheet" href="../assets/admin.css">
 </head>
 <body class="login-body">
 <main class="login-shell">
+    <section class="login-intro" aria-labelledby="login-title">
+        <p class="login-kicker">Inst Automation Bot</p>
+        <h1 id="login-title">Answer the right comments fast.</h1>
+        <p class="login-copy">Keep private replies tied to each post prompt, review every delivery, and catch webhook issues before they turn into missed leads.</p>
+
+        <div class="login-points" aria-label="Highlights">
+            <p>Prompt-aware matching for comment triggers</p>
+            <p>Private replies sent through Meta’s official workflow</p>
+            <p>Webhook logs that make failures easier to track</p>
+        </div>
+
+        <img
+            class="login-art"
+            src="../assets/inst-automation-bot-icon-1024.png"
+            alt="Inst Automation Bot app icon">
+    </section>
+
     <section class="login-panel">
-        <h1>Instagram Comment DM MVP</h1>
-        <p class="muted">Sign in to manage keyword rules, settings, and webhook logs.</p>
+        <p class="login-panel-kicker">Admin Access</p>
+        <h2>Sign in</h2>
+        <p class="muted">Manage rules, sending settings, and recent activity for the connected Instagram account.</p>
 
         <?php if (!$isConfigured): ?>
             <div class="notice error">
@@ -75,7 +93,7 @@ $isConfigured = Env::get('ADMIN_USERNAME') !== ''
             <button type="submit">Sign In</button>
         </form>
     </section>
-    <footer class="public-links" aria-label="Public links">
+    <footer class="public-links public-links-login" aria-label="Public links">
         <a href="../privacy-policy.html">Privacy Policy</a>
         <a href="../terms-of-service.html">Terms of Service</a>
     </footer>
