@@ -46,20 +46,35 @@ $isConfigured = Env::get('ADMIN_USERNAME') !== ''
 <body class="login-body">
 <main class="login-shell">
     <section class="login-intro" aria-labelledby="login-title">
-        <p class="login-kicker">Inst Automation Bot</p>
-        <h1 id="login-title">Answer the right comments fast.</h1>
-        <p class="login-copy">Keep private replies tied to each post prompt, review every delivery, and catch webhook issues before they turn into missed leads.</p>
-
-        <div class="login-points" aria-label="Highlights">
-            <p>Prompt-aware matching for comment triggers</p>
-            <p>Private replies sent through Meta’s official workflow</p>
-            <p>Webhook logs that make failures easier to track</p>
+        <div class="login-brand">
+            <div class="login-brand-mark">
+                <img
+                    class="login-art"
+                    src="../assets/inst-automation-bot-icon-1024.png"
+                    alt="Inst Automation Bot app icon">
+            </div>
+            <div class="login-brand-copy">
+                <p class="login-kicker">Inst Automation Bot</p>
+                <h1 id="login-title">Keep comment replies on cue.</h1>
+            </div>
         </div>
 
-        <img
-            class="login-art"
-            src="../assets/inst-automation-bot-icon-1024.png"
-            alt="Inst Automation Bot app icon">
+        <p class="login-copy">Match post prompts, send official private replies, and review delivery history without digging through webhook noise.</p>
+
+        <div class="login-points" aria-label="Highlights">
+            <div>
+                <strong>Prompt-aware rules</strong>
+                <p>Only answer when the comment matches the keyword the post asked for.</p>
+            </div>
+            <div>
+                <strong>Meta-first delivery</strong>
+                <p>Send private replies through the official workflow tied to the original comment.</p>
+            </div>
+            <div>
+                <strong>Webhook visibility</strong>
+                <p>See recent activity, retries, skips, and delivery failures in one place.</p>
+            </div>
+        </div>
     </section>
 
     <section class="login-panel">
